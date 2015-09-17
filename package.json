@@ -1,0 +1,23 @@
+{
+  "name": "console-to-dom",
+  "version": "1.0.0",
+  "description": "console to dom",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vivaxy/console-to-dom.git"
+  },
+  "keywords": [
+    "console",
+    "browser"
+  ],
+  "author": "vivaxy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vivaxy/console-to-dom/issues"
+  },
+  "homepage": "https://github.com/vivaxy/console-to-dom#readme"
+}
