@@ -3,22 +3,12 @@
  * @author vivaxy
  */
 'use strict';
-console.log(0, [1, 2, 3], {
-    test: 4
-}, 'name', new Date());
+var methodNameArray = ['log', 'debug', 'info', 'warn', 'error'];
 
-console.debug(0, [1, 2, 3], {
-    test: 4
-}, 'name', new Date());
-
-console.info(0, [1, 2, 3], {
-    test: 4
-}, 'name', new Date());
-
-console.warn(0, [1, 2, 3], {
-    test: 4
-}, 'name', new Date());
-
-console.error(0, [1, 2, 3], {
-    test: 4
-}, 'name', new Date());
+methodNameArray.forEach(function (name) {
+    console[name].call(console, true, 0, 'name', undefined, null, [1, 2, 3], {
+        test: 4
+    }, new Date(), function (vari) {
+        return vari++;
+    });
+});
