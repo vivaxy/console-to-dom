@@ -1,4 +1,4 @@
-# console-to-dom
+# console to dom
 console log to dom
 
 ## usage

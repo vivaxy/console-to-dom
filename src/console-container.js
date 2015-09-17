@@ -7,26 +7,33 @@ import setStyle from './set-style.js';
 
 class ConsoleContainer {
     constructor() {
+        let width = document.body.clientWidth;
+        let height = document.body.clientHeight;
         this.parent = document.body;
         this.inner = this._createElement({
+            width: '100%',
             height: '100%',
             overflow: 'auto',
+            fontSize: '12px',
             boxSizing: 'border-box',
             backgroundColor: '#fff'
         });
         this.container = this._createElement({
-            bottom: 0,
-            padding: '2%',
-            height: '50%',
-            width: '100%',
+            top: height * 50 / 100 + 'px',
+            left: 0,
+            width: width + 'px',
+            height: height * 50 / 100 + 'px',
+            padding: width / 100 + 'px',
+            paddingTop: width * 10 / 100 + 'px',
             position: 'absolute',
             boxSizing: 'border-box',
-            backgroundColor: '#999'
+            backgroundColor: '#888'
         });
         this.container.appendChild(this.inner);
         this.parent.appendChild(this.container);
         this.setZIndex(this._getMaxZIndex());
         this._listenToZIndexChange();
+        this._listenToTouch();
     }
 
     _createElement(style, type = 'div') {
@@ -38,6 +45,7 @@ class ConsoleContainer {
     write(level, data) {
         let code = this._createElement({
             display: 'block',
+            //whiteSpace: 'pre-wrap',
             whiteSpace: 'nowrap',
             color: this._getColor(level)
         }, 'code');
@@ -77,7 +85,11 @@ class ConsoleContainer {
     }
 
     _getZIndex(ele) {
-        return parseInt(ele.style.zIndex) || 0;
+        return this._getInteger(ele.style.zIndex);
+    }
+
+    _getInteger(value) {
+        return parseInt(value) || 0;
     }
 
     _getMaxZIndex() {
@@ -105,6 +117,42 @@ class ConsoleContainer {
             //observer.disconnect();
         }
         return this;
+    }
+
+    _listenToTouch() {
+        let position = {};
+        let container = this.container;
+        let inner = this.inner;
+        inner.addEventListener('touchmove', (e)=> {
+            //e.stopPropagation();
+        }, false);
+        container.addEventListener('touchstart', (e)=> {
+            e.preventDefault();
+            e.stopPropagation();
+            position = this._getTouchPosition(e);
+        }, false);
+        container.addEventListener('touchmove', (e)=> {
+            e.preventDefault();
+            e.stopPropagation();
+            let lastPosition = position;
+            position = this._getTouchPosition(e);
+            let top = this._getInteger(container.style.top);
+            let left = this._getInteger(container.style.left);
+            container.style.left = left + position.x - lastPosition.x + 'px';
+            container.style.top = top + position.y - lastPosition.y + 'px';
+        }, false);
+        container.addEventListener('touchend', (e)=> {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    }
+
+    _getTouchPosition(e) {
+        let touch = e.changedTouches[0];
+        return {
+            x: touch.pageX - e.target.offsetLeft,
+            y: touch.pageY - e.target.offsetTop
+        };
     }
 }
 

@@ -22,26 +22,33 @@ var ConsoleContainer = (function () {
     function ConsoleContainer() {
         _classCallCheck(this, ConsoleContainer);
 
+        var width = document.body.clientWidth;
+        var height = document.body.clientHeight;
         this.parent = document.body;
         this.inner = this._createElement({
+            width: '100%',
             height: '100%',
             overflow: 'auto',
+            fontSize: '12px',
             boxSizing: 'border-box',
             backgroundColor: '#fff'
         });
         this.container = this._createElement({
-            bottom: 0,
-            padding: '2%',
-            height: '50%',
-            width: '100%',
+            top: height * 50 / 100 + 'px',
+            left: 0,
+            width: width + 'px',
+            height: height * 50 / 100 + 'px',
+            padding: width / 100 + 'px',
+            paddingTop: width * 10 / 100 + 'px',
             position: 'absolute',
             boxSizing: 'border-box',
-            backgroundColor: '#999'
+            backgroundColor: '#888'
         });
         this.container.appendChild(this.inner);
         this.parent.appendChild(this.container);
         this.setZIndex(this._getMaxZIndex());
         this._listenToZIndexChange();
+        this._listenToTouch();
     }
 
     _createClass(ConsoleContainer, [{
@@ -58,6 +65,7 @@ var ConsoleContainer = (function () {
         value: function write(level, data) {
             var code = this._createElement({
                 display: 'block',
+                //whiteSpace: 'pre-wrap',
                 whiteSpace: 'nowrap',
                 color: this._getColor(level)
             }, 'code');
@@ -100,7 +108,12 @@ var ConsoleContainer = (function () {
     }, {
         key: '_getZIndex',
         value: function _getZIndex(ele) {
-            return parseInt(ele.style.zIndex) || 0;
+            return this._getInteger(ele.style.zIndex);
+        }
+    }, {
+        key: '_getInteger',
+        value: function _getInteger(value) {
+            return parseInt(value) || 0;
         }
     }, {
         key: '_getMaxZIndex',
@@ -136,6 +149,46 @@ var ConsoleContainer = (function () {
                 })();
             }
             return this;
+        }
+    }, {
+        key: '_listenToTouch',
+        value: function _listenToTouch() {
+            var _this4 = this;
+
+            var position = {};
+            var container = this.container;
+            var inner = this.inner;
+            inner.addEventListener('touchmove', function (e) {
+                //e.stopPropagation();
+            }, false);
+            container.addEventListener('touchstart', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                position = _this4._getTouchPosition(e);
+            }, false);
+            container.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var lastPosition = position;
+                position = _this4._getTouchPosition(e);
+                var top = _this4._getInteger(container.style.top);
+                var left = _this4._getInteger(container.style.left);
+                container.style.left = left + position.x - lastPosition.x + 'px';
+                container.style.top = top + position.y - lastPosition.y + 'px';
+            }, false);
+            container.addEventListener('touchend', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        }
+    }, {
+        key: '_getTouchPosition',
+        value: function _getTouchPosition(e) {
+            var touch = e.changedTouches[0];
+            return {
+                x: touch.pageX - e.target.offsetLeft,
+                y: touch.pageY - e.target.offsetTop
+            };
         }
     }]);
 
