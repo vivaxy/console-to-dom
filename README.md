@@ -5,3 +5,4 @@ console log to dom
 
 include `./dest/index.js`
 
+## [demo](http://vivaxy.github.io/console-to-dom/demo)
