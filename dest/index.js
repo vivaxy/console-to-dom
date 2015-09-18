@@ -35,14 +35,43 @@ var ConsoleContainer = (function () {
         });
         this.container = this._createElement({
             top: height * 50 / 100 + 'px',
-            left: 0,
+            left: 0 + 'px',
             width: width + 'px',
             height: height * 50 / 100 + 'px',
-            padding: width / 100 + 'px',
-            paddingTop: width * 10 / 100 + 'px',
+            padding: width * 5 / 100 + 'px',
+            //padding: width / 100 + 'px',
+            //paddingTop: width * 10 / 100 + 'px',
             position: 'absolute',
             boxSizing: 'border-box',
             backgroundColor: '#888'
+        });
+        this.dragTop = this._createElement({
+            top: 0 + 'px',
+            left: 0 + 'px',
+            width: width + 'px',
+            height: width * 5 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragLeft = this._createElement({
+            top: 0 + 'px',
+            left: 0 + 'px',
+            width: width * 5 / 100 + 'px',
+            height: height * 50 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragRight = this._createElement({
+            top: 0 + 'px',
+            right: 0 + 'px',
+            width: width * 5 / 100 + 'px',
+            height: height * 50 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragBottom = this._createElement({
+            bottom: 0 + 'px',
+            left: 0 + 'px',
+            width: width + 'px',
+            height: width * 5 / 100 + 'px',
+            position: 'absolute'
         });
         this.container.appendChild(this.inner);
         this.parent.appendChild(this.container);
@@ -157,37 +186,45 @@ var ConsoleContainer = (function () {
 
             var position = {};
             var container = this.container;
-            var inner = this.inner;
-            inner.addEventListener('touchmove', function (e) {
-                //e.stopPropagation();
-            }, false);
-            container.addEventListener('touchstart', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                position = _this4._getTouchPosition(e);
-            }, false);
-            container.addEventListener('touchmove', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var lastPosition = position;
-                position = _this4._getTouchPosition(e);
-                var top = _this4._getInteger(container.style.top);
-                var left = _this4._getInteger(container.style.left);
-                container.style.left = left + position.x - lastPosition.x + 'px';
-                container.style.top = top + position.y - lastPosition.y + 'px';
-            }, false);
-            container.addEventListener('touchend', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }, false);
+            ['top', 'left', 'right', 'bottom'].forEach(function (name) {
+                var drag = _this4['drag' + name[0].toUpperCase() + name.slice(1)];
+                //let container = this.container;
+                //let inner = this.inner;
+                //inner.addEventListener('touchmove', (e)=> {
+                //    e.stopPropagation();
+                //}, false);
+                drag.addEventListener('touchstart', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    position = _this4._getTouchPosition(e);
+                }, false);
+                drag.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var lastPosition = position;
+                    position = _this4._getTouchPosition(e);
+                    var top = _this4._getInteger(container.style.top);
+                    var left = _this4._getInteger(container.style.left);
+                    container.style.left = left + position.x - lastPosition.x + 'px';
+                    container.style.top = top + position.y - lastPosition.y + 'px';
+                }, false);
+                drag.addEventListener('touchend', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
+                container.appendChild(drag);
+            });
+            return this;
         }
     }, {
         key: '_getTouchPosition',
         value: function _getTouchPosition(e) {
             var touch = e.changedTouches[0];
             return {
-                x: touch.pageX - e.target.offsetLeft,
-                y: touch.pageY - e.target.offsetTop
+                //x: touch.pageX - e.target.offsetLeft,
+                x: touch.pageX,
+                //y: touch.pageY - e.target.offsetTop
+                y: touch.pageY
             };
         }
     }]);

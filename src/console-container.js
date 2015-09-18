@@ -20,14 +20,43 @@ class ConsoleContainer {
         });
         this.container = this._createElement({
             top: height * 50 / 100 + 'px',
-            left: 0,
+            left: 0 + 'px',
             width: width + 'px',
             height: height * 50 / 100 + 'px',
-            padding: width / 100 + 'px',
-            paddingTop: width * 10 / 100 + 'px',
+            padding: width * 5 / 100 + 'px',
+            //padding: width / 100 + 'px',
+            //paddingTop: width * 10 / 100 + 'px',
             position: 'absolute',
             boxSizing: 'border-box',
             backgroundColor: '#888'
+        });
+        this.dragTop = this._createElement({
+            top: 0 + 'px',
+            left: 0 + 'px',
+            width: width + 'px',
+            height: width * 5 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragLeft = this._createElement({
+            top: 0 + 'px',
+            left: 0 + 'px',
+            width: width * 5 / 100 + 'px',
+            height: height * 50 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragRight = this._createElement({
+            top: 0 + 'px',
+            right: 0 + 'px',
+            width: width * 5 / 100 + 'px',
+            height: height * 50 / 100 + 'px',
+            position: 'absolute'
+        });
+        this.dragBottom = this._createElement({
+            bottom: 0 + 'px',
+            left: 0 + 'px',
+            width: width + 'px',
+            height: width * 5 / 100 + 'px',
+            position: 'absolute'
         });
         this.container.appendChild(this.inner);
         this.parent.appendChild(this.container);
@@ -122,36 +151,44 @@ class ConsoleContainer {
     _listenToTouch() {
         let position = {};
         let container = this.container;
-        let inner = this.inner;
-        inner.addEventListener('touchmove', (e)=> {
-            //e.stopPropagation();
-        }, false);
-        container.addEventListener('touchstart', (e)=> {
-            e.preventDefault();
-            e.stopPropagation();
-            position = this._getTouchPosition(e);
-        }, false);
-        container.addEventListener('touchmove', (e)=> {
-            e.preventDefault();
-            e.stopPropagation();
-            let lastPosition = position;
-            position = this._getTouchPosition(e);
-            let top = this._getInteger(container.style.top);
-            let left = this._getInteger(container.style.left);
-            container.style.left = left + position.x - lastPosition.x + 'px';
-            container.style.top = top + position.y - lastPosition.y + 'px';
-        }, false);
-        container.addEventListener('touchend', (e)=> {
-            e.preventDefault();
-            e.stopPropagation();
-        }, false);
+        ['top', 'left', 'right', 'bottom'].forEach((name) => {
+            let drag = this['drag' + name[0].toUpperCase() + name.slice(1)];
+            //let container = this.container;
+            //let inner = this.inner;
+            //inner.addEventListener('touchmove', (e)=> {
+            //    e.stopPropagation();
+            //}, false);
+            drag.addEventListener('touchstart', (e)=> {
+                e.preventDefault();
+                e.stopPropagation();
+                position = this._getTouchPosition(e);
+            }, false);
+            drag.addEventListener('touchmove', (e)=> {
+                e.preventDefault();
+                e.stopPropagation();
+                let lastPosition = position;
+                position = this._getTouchPosition(e);
+                let top = this._getInteger(container.style.top);
+                let left = this._getInteger(container.style.left);
+                container.style.left = left + position.x - lastPosition.x + 'px';
+                container.style.top = top + position.y - lastPosition.y + 'px';
+            }, false);
+            drag.addEventListener('touchend', (e)=> {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+            container.appendChild(drag);
+        });
+        return this;
     }
 
     _getTouchPosition(e) {
         let touch = e.changedTouches[0];
         return {
-            x: touch.pageX - e.target.offsetLeft,
-            y: touch.pageY - e.target.offsetTop
+            //x: touch.pageX - e.target.offsetLeft,
+            x: touch.pageX,
+            //y: touch.pageY - e.target.offsetTop
+            y: touch.pageY
         };
     }
 }
