@@ -3,12 +3,12 @@
  * @author vivaxy
  */
 'use strict';
-import Log from './log.js';
+import Logger from './logger.js';
 import ConsoleContainer from './console-container.js';
 
-let log = new Log();
+let logger = new Logger();
 let container = new ConsoleContainer();
 
-log.on('data', (level, data)=> {
+logger.on('data', (level, data)=> {
     container.write(level, data);
 });
