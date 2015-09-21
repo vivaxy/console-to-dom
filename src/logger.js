@@ -4,7 +4,7 @@
  */
 'use strict';
 import logLevel from './log-level.js';
-import EventEmitter from './event-emitter';
+import EventEmitter from '../event-emitter/src/event-emitter.js';
 
 class Logger extends EventEmitter {
     constructor() {

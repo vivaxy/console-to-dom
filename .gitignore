@@ -1,6 +1,5 @@
 .idea
 .DS_Store
 node_modules
-npm_debug.log
+npm-debug.log
 event-emitter
-build

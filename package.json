@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/vivaxy/console-to-dom#readme",
   "devDependencies": {
-    "babel": "^5.8.23",
+    "babelify": "^6.3.0",
     "browserify": "^11.1.0"
   }
 }

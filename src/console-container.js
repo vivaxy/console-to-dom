@@ -21,8 +21,8 @@ class ConsoleContainer {
      * @private
      */
     _initializeContainer() {
-        let width = document.body.clientWidth;
-        let height = document.body.clientHeight;
+        let width = window.innerWidth; // document.body.clientWidth;
+        let height = window.innerHeight; // document.body.clientHeight;
         this.container = this._createElement({
             top: height * 50 / 100 + 'px',
             left: 0 + 'px',

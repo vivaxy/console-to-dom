@@ -1,5 +1,87 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
+ * @since 15-09-02 10:25
+ * @author vivaxy
+ */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var EventEmitter = (function () {
+    function EventEmitter() {
+        _classCallCheck(this, EventEmitter);
+
+        this.events = {};
+    }
+
+    /**
+     *
+     * @param event
+     * @param callback
+     * @returns {EventEmitter}
+     */
+
+    _createClass(EventEmitter, [{
+        key: 'on',
+        value: function on(event, callback) {
+            if (!this.events[event]) {
+                this.events[event] = [];
+            }
+            this.events[event].push(callback);
+            return this;
+        }
+
+        /**
+         *
+         * @param event
+         * @returns {EventEmitter}
+         */
+    }, {
+        key: 'emit',
+        value: function emit(event) {
+            var callbacks = this.events[event],
+                _this = this,
+                _arguments = arguments;
+            if (callbacks) {
+                callbacks.forEach(function (callback) {
+                    callback.apply(_this, Array.prototype.slice.call(_arguments, 1));
+                });
+            }
+            return this;
+        }
+
+        /**
+         *
+         * @param event
+         * @param callback
+         * @returns {EventEmitter}
+         */
+    }, {
+        key: 'off',
+        value: function off(event, callback) {
+            if (this.events[event] && callback) {
+                this.events[event].splice(this.events[event].indexOf(callback), 1);
+            } else {
+                this.events[event] = [];
+            }
+            return this;
+        }
+    }]);
+
+    return EventEmitter;
+})();
+
+exports['default'] = EventEmitter;
+module.exports = exports['default'];
+
+},{}],2:[function(require,module,exports){
+/**
  * @since 2015-09-17 17:51
  * @author vivaxy
  */
@@ -35,8 +117,8 @@ var ConsoleContainer = (function () {
     _createClass(ConsoleContainer, [{
         key: '_initializeContainer',
         value: function _initializeContainer() {
-            var width = document.body.clientWidth;
-            var height = document.body.clientHeight;
+            var width = window.innerWidth; // document.body.clientWidth;
+            var height = window.innerHeight; // document.body.clientHeight;
             this.container = this._createElement({
                 top: height * 50 / 100 + 'px',
                 left: 0 + 'px',
@@ -346,89 +428,8 @@ var ConsoleContainer = (function () {
 
 exports['default'] = ConsoleContainer;
 module.exports = exports['default'];
-},{"./log-level.js":4}],2:[function(require,module,exports){
-/**
- * @since 15-09-02 10:25
- * @author vivaxy
- */
-'use strict';
 
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var EventEmitter = (function () {
-    function EventEmitter() {
-        _classCallCheck(this, EventEmitter);
-
-        this.events = {};
-    }
-
-    /**
-     *
-     * @param event
-     * @param callback
-     * @returns {EventEmitter}
-     */
-
-    _createClass(EventEmitter, [{
-        key: 'on',
-        value: function on(event, callback) {
-            if (!this.events[event]) {
-                this.events[event] = [];
-            }
-            this.events[event].push(callback);
-            return this;
-        }
-
-        /**
-         *
-         * @param event
-         * @returns {EventEmitter}
-         */
-    }, {
-        key: 'emit',
-        value: function emit(event) {
-            var callbacks = this.events[event],
-                _this = this,
-                _arguments = arguments;
-            if (callbacks) {
-                callbacks.forEach(function (callback) {
-                    callback.apply(_this, Array.prototype.slice.call(_arguments, 1));
-                });
-            }
-            return this;
-        }
-
-        /**
-         *
-         * @param event
-         * @param callback
-         * @returns {EventEmitter}
-         */
-    }, {
-        key: 'off',
-        value: function off(event, callback) {
-            if (this.events[event] && callback) {
-                this.events[event].splice(this.events[event].indexOf(callback), 1);
-            } else {
-                this.events[event] = [];
-            }
-            return this;
-        }
-    }]);
-
-    return EventEmitter;
-})();
-
-exports['default'] = EventEmitter;
-module.exports = exports['default'];
-
-},{}],3:[function(require,module,exports){
+},{"./log-level.js":4}],3:[function(require,module,exports){
 /**
  * @since 2015-09-17 15:40
  * @author vivaxy
@@ -451,7 +452,8 @@ var container = new _consoleContainerJs2['default']();
 logger.on('data', function (level, data) {
   container.write(level, data);
 });
-},{"./console-container.js":1,"./logger.js":5}],4:[function(require,module,exports){
+
+},{"./console-container.js":2,"./logger.js":5}],4:[function(require,module,exports){
 /**
  * @since 2015-09-20 14:47
  * @author vivaxy
@@ -482,6 +484,7 @@ exports['default'] = [{
     color: '#c33' // red
 }];
 module.exports = exports['default'];
+
 },{}],5:[function(require,module,exports){
 /**
  * @since 2015-09-17 18:01
@@ -506,9 +509,9 @@ var _logLevelJs = require('./log-level.js');
 
 var _logLevelJs2 = _interopRequireDefault(_logLevelJs);
 
-var _eventEmitter = require('./event-emitter');
+var _eventEmitterSrcEventEmitterJs = require('../event-emitter/src/event-emitter.js');
 
-var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+var _eventEmitterSrcEventEmitterJs2 = _interopRequireDefault(_eventEmitterSrcEventEmitterJs);
 
 var Logger = (function (_EventEmitter) {
     _inherits(Logger, _EventEmitter);
@@ -548,8 +551,9 @@ var Logger = (function (_EventEmitter) {
     }]);
 
     return Logger;
-})(_eventEmitter2['default']);
+})(_eventEmitterSrcEventEmitterJs2['default']);
 
 exports['default'] = Logger;
 module.exports = exports['default'];
-},{"./event-emitter":2,"./log-level.js":4}]},{},[3]);
+
+},{"../event-emitter/src/event-emitter.js":1,"./log-level.js":4}]},{},[3]);
