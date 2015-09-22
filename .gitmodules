@@ -2,3 +2,7 @@
 	path = event-emitter
 	url = https://github.com/vivaxy/event-emitter.git
 	branch = gh-pages
+[submodule "ajax"]
+	path = ajax
+	url = https://github.com/vivaxy/ajax.git
+	branch = gh-pages

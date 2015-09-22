@@ -7,8 +7,9 @@ import logLevel from './log-level.js';
 
 class ConsoleContainer {
     constructor() {
-        this.parent = document.body;
-        this._initializeContainer()
+        this.parent = document.body || alert('`console to dom`: document has not body');
+        this
+            ._initializeContainer()
             ._initializeInner()
             ._listenToTouch()
             .setZIndex(this._getMaxZIndex())
@@ -104,12 +105,14 @@ class ConsoleContainer {
      * @param data
      * @returns {ConsoleContainer}
      */
-    write(level, data) {
+    write(level = 0, data = []) {
         let code = this._createElement({
             display: 'block',
-            //whiteSpace: 'pre-wrap',
-            whiteSpace: 'nowrap',
-            color: this._getColor(level)
+            whiteSpace: 'pre',
+            color: this._getColor(level),
+            backgroundImage: 'linear-gradient(180deg, #ccc, transparent 51%)',
+            backgroundSize: '100% 1px',
+            backgroundRepeat: 'no-repeat'
         }, 'code');
         code.textContent = Array.prototype.map.call(data, (obj)=> {
             var string = '';
@@ -123,6 +126,9 @@ class ConsoleContainer {
                     break;
                 case typeof obj === 'undefined':
                     string = 'undefined';
+                    break;
+                case obj instanceof ErrorEvent:
+                    string = obj.error.stack;
                     break;
                 default:
                     string = JSON.stringify(obj);

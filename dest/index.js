@@ -104,7 +104,7 @@ var ConsoleContainer = (function () {
     function ConsoleContainer() {
         _classCallCheck(this, ConsoleContainer);
 
-        this.parent = document.body;
+        this.parent = document.body || alert('`console to dom`: document has not body');
         this._initializeContainer()._initializeInner()._listenToTouch().setZIndex(this._getMaxZIndex())._listenToZIndexChange();
     }
 
@@ -208,12 +208,17 @@ var ConsoleContainer = (function () {
          */
     }, {
         key: 'write',
-        value: function write(level, data) {
+        value: function write() {
+            var level = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+            var data = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
             var code = this._createElement({
                 display: 'block',
-                //whiteSpace: 'pre-wrap',
-                whiteSpace: 'nowrap',
-                color: this._getColor(level)
+                whiteSpace: 'pre',
+                color: this._getColor(level),
+                backgroundImage: 'linear-gradient(180deg, #ccc, transparent 51%)',
+                backgroundSize: '100% 1px',
+                backgroundRepeat: 'no-repeat'
             }, 'code');
             code.textContent = Array.prototype.map.call(data, function (obj) {
                 var string = '';
@@ -227,6 +232,9 @@ var ConsoleContainer = (function () {
                         break;
                     case typeof obj === 'undefined':
                         string = 'undefined';
+                        break;
+                    case obj instanceof ErrorEvent:
+                        string = obj.error.stack;
                         break;
                     default:
                         string = JSON.stringify(obj);
@@ -450,7 +458,11 @@ var logger = new _loggerJs2['default']();
 var container = new _consoleContainerJs2['default']();
 
 logger.on('data', function (level, data) {
-  container.write(level, data);
+    container.write(level, data);
+}).on('ajax', function (data) {
+    container.write(1, [data.method, data.url]);
+}).on('error', function (data) {
+    container.write(4, data);
 });
 
 },{"./console-container.js":2,"./logger.js":5}],4:[function(require,module,exports){
@@ -469,11 +481,11 @@ exports['default'] = [{
 }, {
     level: 1,
     string: 'debug',
-    color: '#3c3' // green
+    color: '#3cc' // green
 }, {
     level: 2,
     string: 'info',
-    color: '#33c' // cyan
+    color: '#38c' // cyan
 }, {
     level: 3,
     string: 'warn',
@@ -520,7 +532,7 @@ var Logger = (function (_EventEmitter) {
         _classCallCheck(this, Logger);
 
         _get(Object.getPrototypeOf(Logger.prototype), 'constructor', this).call(this);
-        this._override();
+        this._listenToConsole()._listenToAjax()._listenToError();
     }
 
     /**
@@ -530,9 +542,9 @@ var Logger = (function (_EventEmitter) {
      */
 
     _createClass(Logger, [{
-        key: '_override',
-        value: function _override() {
-            var _this = this;
+        key: '_listenToConsole',
+        value: function _listenToConsole() {
+            var _this2 = this;
 
             var originalConsole = window.console;
             _logLevelJs2['default'].forEach(function (level) {
@@ -543,10 +555,52 @@ var Logger = (function (_EventEmitter) {
                     }
 
                     method.apply(console, args);
-                    _this.emit('data', level.level, args);
+                    _this2.emit('data', level.level, args);
                 };
             });
             return this;
+        }
+
+        /**
+         * catch ajax
+         * @returns {Logger}
+         * @private
+         */
+    }, {
+        key: '_listenToAjax',
+        value: function _listenToAjax() {
+            var _this = this;
+            var originalSend = XMLHttpRequest.prototype.send;
+            var originalOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+                this.method = method;
+                this.url = url;
+                this.async = async;
+                this.user = user;
+                this.password = password;
+                originalOpen.apply(this, arguments);
+            };
+            XMLHttpRequest.prototype.send = function (body) {
+                _this.emit('ajax', {
+                    method: this.method,
+                    url: this.url,
+                    async: this.async,
+                    user: this.user,
+                    password: this.password,
+                    responseHeaders: JSON.stringify(this.getAllResponseHeaders())
+                });
+                originalSend.call(this, body);
+            };
+            return this;
+        }
+    }, {
+        key: '_listenToError',
+        value: function _listenToError() {
+            var _this3 = this;
+
+            window.addEventListener('error', function (e) {
+                _this3.emit('error', [e]);
+            }, false);
         }
     }]);
 

@@ -12,12 +12,12 @@ export default [
     {
         level: 1,
         string: 'debug',
-        color: '#3c3' // green
+        color: '#3cc' // green
     },
     {
         level: 2,
         string: 'info',
-        color: '#33c' // cyan
+        color: '#38c' // cyan
     },
     {
         level: 3,
