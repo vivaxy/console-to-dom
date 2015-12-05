@@ -156,7 +156,9 @@ class ConsoleContainer {
             return string;
         }).join(' ');
         this.inner.appendChild(code);
-        code.scrollIntoView(true);
+        // show to last line, instead of move last into view
+        //code.scrollIntoView(true);
+        this.inner.scrollTop = this.inner.scrollHeight;
         return this;
     }
 
