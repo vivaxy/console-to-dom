@@ -6,14 +6,34 @@
 import logLevel from './log-level.js';
 
 class ConsoleContainer {
-    constructor() {
+    constructor(style) {
         this.parent = document.body || alert('`console to dom`: document has not body');
-        this
-            ._initializeContainer()
-            ._initializeInner()
-            ._listenToTouch()
-            .setZIndex(this._getMaxZIndex())
-            ._listenToZIndexChange();
+        this.top = style.top;
+        this.left = style.left;
+        this.height = style.height;
+        this.width = style.width;
+        this.padding = style.padding;
+
+        if (this.top === undefined) {
+            this.top = 50;
+        }
+        if (this.left = undefined) {
+            this.left = 0;
+        }
+        if (this.height === undefined) {
+            this.height = 50;
+        }
+        if (this.width === undefined) {
+            this.width = 100;
+        }
+        if (this.padding === undefined) {
+            this.padding = 5;
+        }
+        this._initializeContainer();
+        this._initializeInner();
+        this._listenToTouch();
+        this.setZIndex(this._getMaxZIndex());
+        this._listenToZIndexChange();
     }
 
     /**
@@ -25,11 +45,11 @@ class ConsoleContainer {
         let width = window.innerWidth; // document.body.clientWidth;
         let height = window.innerHeight; // document.body.clientHeight;
         this.container = this._createElement({
-            top: height * 50 / 100 + 'px',
-            left: 0 + 'px',
-            width: width + 'px',
-            height: height * 50 / 100 + 'px',
-            padding: width * 5 / 100 + 'px',
+            top: height * this.top / 100 + 'px',
+            left: width * this.left / 100 + 'px',
+            width: width * this.width / 100 + 'px',
+            height: height * this.height / 100 + 'px',
+            padding: width * this.padding / 100 + 'px',
             //padding: width / 100 + 'px',
             //paddingTop: width * 10 / 100 + 'px',
             position: 'absolute',

@@ -101,11 +101,36 @@ var _logLevelJs = require('./log-level.js');
 var _logLevelJs2 = _interopRequireDefault(_logLevelJs);
 
 var ConsoleContainer = (function () {
-    function ConsoleContainer() {
+    function ConsoleContainer(style) {
         _classCallCheck(this, ConsoleContainer);
 
         this.parent = document.body || alert('`console to dom`: document has not body');
-        this._initializeContainer()._initializeInner()._listenToTouch().setZIndex(this._getMaxZIndex())._listenToZIndexChange();
+        this.top = style.top;
+        this.left = style.left;
+        this.height = style.height;
+        this.width = style.width;
+        this.padding = style.padding;
+
+        if (this.top === undefined) {
+            this.top = 50;
+        }
+        if (this.left = undefined) {
+            this.left = 0;
+        }
+        if (this.height === undefined) {
+            this.height = 50;
+        }
+        if (this.width === undefined) {
+            this.width = 100;
+        }
+        if (this.padding === undefined) {
+            this.padding = 5;
+        }
+        this._initializeContainer();
+        this._initializeInner();
+        this._listenToTouch();
+        this.setZIndex(this._getMaxZIndex());
+        this._listenToZIndexChange();
     }
 
     /**
@@ -120,11 +145,11 @@ var ConsoleContainer = (function () {
             var width = window.innerWidth; // document.body.clientWidth;
             var height = window.innerHeight; // document.body.clientHeight;
             this.container = this._createElement({
-                top: height * 50 / 100 + 'px',
-                left: 0 + 'px',
-                width: width + 'px',
-                height: height * 50 / 100 + 'px',
-                padding: width * 5 / 100 + 'px',
+                top: height * this.top / 100 + 'px',
+                left: width * this.left / 100 + 'px',
+                width: width * this.width / 100 + 'px',
+                height: height * this.height / 100 + 'px',
+                padding: width * this.padding / 100 + 'px',
                 //padding: width / 100 + 'px',
                 //paddingTop: width * 10 / 100 + 'px',
                 position: 'absolute',
@@ -443,6 +468,9 @@ module.exports = exports['default'];
  * @author vivaxy
  */
 'use strict';
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -454,16 +482,25 @@ var _consoleContainerJs = require('./console-container.js');
 
 var _consoleContainerJs2 = _interopRequireDefault(_consoleContainerJs);
 
-var logger = new _loggerJs2['default']();
-var container = new _consoleContainerJs2['default']();
+var consoleToDom = function consoleToDom() {
+    var style = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-logger.on('data', function (level, data) {
-    container.write(level, data);
-}).on('ajax', function (data) {
-    container.write(1, [data.method, data.url]);
-}).on('error', function (data) {
-    container.write(4, data);
-});
+    var logger = new _loggerJs2['default']();
+    var container = new _consoleContainerJs2['default'](style);
+
+    logger.on('data', function (level, data) {
+        container.write(level, data);
+    }).on('ajax', function (data) {
+        container.write(1, [data.method, data.url]);
+    }).on('error', function (data) {
+        container.write(4, data);
+    });
+};
+
+exports['default'] = consoleToDom;
+
+window.consoleToDom = consoleToDom;
+module.exports = exports['default'];
 
 },{"./console-container.js":2,"./logger.js":5}],4:[function(require,module,exports){
 /**
