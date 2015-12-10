@@ -3,7 +3,7 @@
  * @author vivaxy
  */
 'use strict';
-import Ajax from '../ajax/src/ajax.js';
+import Ajax from '../node_modules/ajax/src/ajax.js';
 
 let methodNameArray = ['log', 'debug', 'info', 'warn', 'error'];
 

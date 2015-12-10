@@ -1,14 +1,30 @@
-# console to dom
-console log to dom
+# usage
 
-## usage
+add this to debug html
 
-include `./dest/index.js`
+```
+<script type="text/javascript" src="../dest/index.js"></script>
+<script>
+    consoleToDom();
+</script>
+```
 
-## [demo](http://vivaxy.github.io/console-to-dom/demo)
+# [demo](http://vivaxy.github.io/console-to-dom/demo)
 
-## develop
+# develop
 
-1. `git submodule update --init --recursive`
+1. `> npm i`
 
-2. `make`
+2. `> npm run build`
+
+with webpack-dev-server `> npm run server`
+
+# todo
+
+- use absolute pixel instead of percentage
+
+# changelog
+
+- 1.0.1 update to webpack and npm dependencies
+
+- 1.0.0 initialize
