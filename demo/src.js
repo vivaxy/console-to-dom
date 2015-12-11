@@ -45,10 +45,10 @@ setTimeout(function () {
 let ajax = new Ajax({
     url: 'data.json'
 }).on('success', (data) => {
-        console.log(JSON.parse(data));
-    }).on('readystatechange', function (data) {
-        console.log(data);
-    }).send('name=jack&date=2015-04-03');
+    console.log(JSON.parse(data));
+}).on('readystatechange', function (data) {
+    console.log(data);
+}).send('name=jack&date=2015-04-03');
 
 ajax.send({
     'name': 'jones',

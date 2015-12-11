@@ -353,7 +353,7 @@
 	    function ConsoleContainer(style) {
 	        _classCallCheck(this, ConsoleContainer);
 
-	        this.parent = document.body || alert('`console to dom`: document has not body');
+	        this.parent = document.body || alert('`console to dom`: document has no body element');
 	        this.top = style.top;
 	        this.left = style.left;
 	        this.height = style.height;
