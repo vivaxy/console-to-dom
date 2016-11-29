@@ -1,4 +1,6 @@
-# usage
+> Deprecated. See [eruda](https://github.com/liriliri/eruda) instead.
+
+# Usage
 
 add this to debug html
 
@@ -9,9 +11,9 @@ add this to debug html
 </script>
 ```
 
-# [demo](http://vivaxy.github.io/console-to-dom/demo)
+# [Demo](http://vivaxy.github.io/console-to-dom/demo)
 
-# develop
+# Develop
 
 1. `> npm i`
 
@@ -19,8 +21,6 @@ add this to debug html
 
 with webpack-dev-server `> npm run server`
 
-# changelog
+# Change log
 
-- 1.0.1 update to webpack and npm dependencies
-
-- 1.0.0 initialize
+[Change log](CHANGELOG.md)
